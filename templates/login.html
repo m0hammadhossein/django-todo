@@ -1,0 +1,37 @@
+{% extends 'todo.html' %}
+{% load widget_tweaks %}
+{% block title %}login{% endblock %}
+{% block body %}
+    <form method="post" class="container" style="max-width: 40rem;margin: 2rem auto;">{% csrf_token %}
+        <div class="mb-3 input-group input-group-lg" style="padding:10px 10px 0 0;">
+            <span class="input-group-text">username</span>
+            {% render_field form.username class="form-control fs-6" %}
+        </div>
+        {% if form.username.errors %}
+            <div class="alert alert-warning">
+                {{ form.username.errors }}
+            </div>
+        {% endif %}
+        <div class="mb-3 input-group input-group-lg" style="padding: 10px 10px 0 0;">
+            <span class="input-group-text">password</span>
+            {% render_field form.password class="form-control fs-6" placholder="password" %}
+        </div>
+        {% if form.password.errors %}
+            <div class="alert alert-warning">
+                {{ form.password.errors }}
+            </div>
+        {% endif %}
+        {% if form.password.errors %}
+            <div class="alert alert-warning">
+                {{ form.password.errors }}
+            </div>
+        {% elif form.errors %}
+            <div class="alert alert-warning">
+                {% for error in form.errors.values %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <button type="submit" class="btn btn-lg btn-primary" style="margin: 0 auto">Login</button>
+    </form>
+{% endblock %}

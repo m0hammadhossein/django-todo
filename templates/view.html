@@ -1,0 +1,14 @@
+{% extends 'todo.html' %}
+{% block title %}view{% endblock %}
+{% block body %}
+    <div class="border-0 border-dark text-break" style="width: 50%;margin: 3rem auto">
+        <h3><span class="badge bg-success">Title</span></h3><br/>
+        <p class="fs-2">{{ object.title }}</p><br/>
+        <h3><span class="badge bg-success">Description</span></h3><br/>
+        <p class="fs-3">{{ object.description }}</p><br/>
+        <div class="d-md-flex justify-content-md-center">
+            <a class="btn btn-lg btn-primary" href="{% url 'edit' object.pk %}">Edit</a>
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% load static %}
+{% load paginator_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    <title>{% block title %}Todo{% endblock %}</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <h3><span class="navbar-brand badge bg-secondary">TO-DO</span></h3>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Tasks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'create' %}">Add Task</a>
+                </li>
+            </ul>
+            {% if user.is_authenticated %}
+                <div class="d-flex">
+                    <a class="btn btn-success" href="{% url 'logout' %}">Logout</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+{% block body %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Condition</th>
+            <th scope="col">Change condition</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for object in todo_list %}
+            <tr>
+                <td>{{ object.title }}</td>
+                <td>{{ object.description|slice:":10" }}...</td>
+                <td><span class="badge bg-primary">{{ object.get_condition_display }}</span></td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary" href="{% url 'edit' object.pk %}">Edit</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'view' object.pk %}">View</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if is_paginated %}
+        <br/>
+        <nav class="d-md-flex justify-content-md-center">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="{% url 'index' %}?pg={{ page_obj.previous_page_number }}"
+                           aria-label="Previous">&laquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" aria-label="Previous">&laquo;</a>
+                    </li>
+                {% endif %}
+                {% get_proper_elided_page_range paginator page_obj.number as page_range %}
+                {% for page_num in page_range %}
+                    {% if page_obj.number == page_num %}
+                        <li class="page-item active"><a class="page-link"
+                                                        href="{% url 'index' %}?pg={{ page_num }}">{{ page_num }}</a>
+                        </li>
+                    {% elif page_num == paginator.ELLIPSIS %}
+                        <li class="page-item"><span class="page-link">{{ paginator.ELLIPSIS }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="{% url 'index' %}?pg={{ page_num }}">{{ page_num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{% url 'index' %}?pg={{ page_obj.next_page_number }}"
+                           aria-label="Previous">&raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" aria-label="Previous">&raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endblock %}
+<script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+</body>
+</html>
