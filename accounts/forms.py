@@ -7,7 +7,7 @@ User = get_user_model()
 class SignUpForm(forms.ModelForm):
     confirm_password = forms.CharField(required=True)
 
-    def clean_repeat_password(self):
+    def clean_confirm_password(self):
         password = self.cleaned_data.get('password')
         rpassword = self.cleaned_data.get('confirm_password')
         if password != rpassword:
